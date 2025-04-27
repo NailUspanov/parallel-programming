@@ -1,3 +1,3 @@
-module github.com/nailuspanov/go-sample-app
+module github.com/nailuspanov/sstu-projects/parallel-programming
 
 go 1.24.0
