@@ -59,16 +59,17 @@ func main() {
 		fmt.Println("Результаты:", results)
 	case "race":
 		fmt.Println("1. Демонстрация проблемы гонки данных:")
-		race_condition.RunRaceConditionProblem()
+		race_condition.RunRaceConditionProblem(500)
 
-		fmt.Println("\n2. Решение с использованием каналов:")
-		race_condition.RunRaceConditionSolution()
-
-		fmt.Println("\n3. Решение с использованием мьютекса:")
-		race_condition.RunRaceConditionMutex()
+		fmt.Println("\n2. Решения проблемы гонки данных:")
+		race_condition.RunRaceConditionSolution(500)
 	case "combined":
-		results := combined.RunCombined()
+		results := combined.RunBasicWorkerPool(4, 10)
 		fmt.Println("Результаты:", results)
+
+		fmt.Println("\nПример с таймаутом:")
+		resultsTimeout := combined.RunWorkerPoolWithTimeout(4, 20, 500*time.Millisecond)
+		fmt.Println("Результаты с таймаутом:", resultsTimeout)
 	default:
 		fmt.Println("Неизвестный пример:", example)
 	}
@@ -85,10 +86,12 @@ func runAll() {
 		{"Направленные каналы", func() { directed_channels.RunDirectedChannels() }},
 		{"Закрытие канала", func() { closed_channel.RunClosedChannel() }},
 		{"Группы ожидания", func() { waitgroups.RunWaitGroups() }},
-		{"Проблема гонки данных", func() { race_condition.RunRaceConditionProblem() }},
-		{"Решение гонки данных с каналами", func() { race_condition.RunRaceConditionSolution() }},
-		{"Решение гонки данных с мьютексом", func() { race_condition.RunRaceConditionMutex() }},
-		{"Комбинированный пример", func() { combined.RunCombined() }},
+		{"Проблема гонки данных", func() { race_condition.RunRaceConditionProblem(500) }},
+		{"Решение гонки данных", func() { race_condition.RunRaceConditionSolution(500) }},
+		{"Комбинированный пример", func() { combined.RunBasicWorkerPool(4, 10) }},
+		{"Пример с контекстом и таймаутом", func() {
+			combined.RunWorkerPoolWithTimeout(4, 20, 500*time.Millisecond)
+		}},
 	}
 
 	var wg sync.WaitGroup
